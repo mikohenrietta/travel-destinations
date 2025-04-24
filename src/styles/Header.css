@@ -1,0 +1,38 @@
+.navbar{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2em;
+    border-bottom: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #70899c;
+    height: 70px;
+    background-color: #1f333d;
+    box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.5);
+  }
+  nav{
+    margin-right: 20px;
+    display: flex;
+    gap: 20px
+  }
+  nav .material-icons {
+    font-size: 1.2em;
+    vertical-align: middle; /* Ensures it aligns well with text */
+  }
+  nav a{
+    text-decoration: none;
+    padding: 10px;
+    margin-left: 10px;
+    font-family: 'Cormorant Garamond','Times New Roman', Arial;
+    font-weight: 500;
+    color: #ffffff;
+    font-size: 1.3em;
+    gap: 5px;
+    display: flex;
+  }
+  nav a:hover{
+    color: #c3c9ce;
+  }

@@ -1,0 +1,83 @@
+[
+    {
+        "name": "Colosseum",
+        "picture": "/colosseum.jpg",
+        "description": "Construction of the Colosseum began in 72AD, and it was completed in 80AD. The Colosseum was started under Emperor Vespasian, but he died before it was completed. Construction was finished under his two sons, Emperors Titus and Domitian. The actual building was done largely by Jewish slaves, overseen by Roman engineers and craftsmen. After gaining victory in the first Jewish-Roman war, the Jewish Temple of Jerusalem was sacked and many of the province’s inhabitants were made slaves. They were transported back to Rome and it is estimated that 60,000 to 100,000 were employed in the construction of the Colosseum. Construction of the Colosseum was completed in the year 80 AD, making the building 1,937 years old. The Colosseum was originally known as the Flavian Amphitheater, because it was built by Emperors Vespasian, Titus, and Domitian, successors to Nero of the Flavian dynasty. The name “Colosseum” likely comes from the colossal bronze statue of Emperor Nero that used to stand next to the building. This statue was itself modeled on the Colossus of Rhodes. Emperor Vespasian was the first of the Flavian dynasty. He commissioned the Colosseum.",
+        "address": "Regio III Isis et Serapis, Rome, Italy",
+        "country": "Italy",
+        "continent": "Europe",
+        "rating": 7.6
+    },
+    {
+        "name": "Machu Picchu",
+        "picture":"/machupicchu.jpg",
+        "description": "Machu Picchu is a 15th-century Inca citadel located in the Eastern Cordillera of southern Peru on a mountain ridge at 2,430 meters (7,970 ft). Often referred to as the \"Lost City of the Incas\", it is the most familiar icon of the Inca Empire. It is located in the Machupicchu District within the Urubamba Province above the Sacred Valley, which is 80 kilometers (50 mi) northwest of the city of Cusco. The Urubamba River flows past it, cutting through the Cordillera and creating a canyon with a subtropical mountain climate.",
+        "address": "Urubamba, Cusco, Peru",
+        "country": "Peru",
+        "continent": "South America",
+        "rating": 8.4
+    },
+    {
+        "name": "Eiffel Tower",
+        "picture": "/eiffel.jpg",
+        "description": "desxr",
+        "address": "asd",
+        "country": "France",
+        "continent": "Europe",
+        "rating": 6.7
+    },
+    {
+        "name": "Big Ben",
+        "picture": "/bigben.jpg",
+        "description": "desxr",
+        "address": "asd",
+        "country": "England",
+        "continent": "Europe",
+        "rating": 7.4
+    },
+    {
+        "name": "The Great Wall Of China",
+        "picture": "/wall.jpg",
+        "description": "desxr",
+        "address": "asd",
+        "country": "China",
+        "continent": "Asia",
+        "rating": 6
+    },
+    {
+        "name": "Mount Fuji",
+        "picture": "/fuji.jpg",
+        "description": "desxr",
+        "address": "asd",
+        "country": "Japan",
+        "continent": "Asia",
+        "rating": 8.9
+    },
+    {
+        "name": "Taj Mahal",
+        "picture": "/tajmahal.jpg",
+        "description": "desxr",
+        "address": "asd",
+        "country": "India",
+        "continent": "Asia",
+        "rating": 8.2
+    },
+    {
+        "name": "Christ The Redeemer",
+        "picture": "/redeemer.jpg",
+        "description": "desxr",
+        "address": "asd",
+        "country": "Brazil",
+        "continent": "South America",
+        "rating": 9.1
+    },
+    {
+        "name":"Mount Kilimanjaro",
+        "picture": "/kilimanjaro.jpg",
+        "description": "Mount Kilimanjaro is a dormant volcano in Tanzania. It is the highest mountain in Africa and the highest free-standing mountain above sea level in the world, at 5,895 m (19,341 ft) above sea level and 4,900 m (16,100 ft) above its plateau base. It is also the highest volcano in the Eastern Hemisphere and the fourth most topographically prominent peak on Earth. Kilimanjaro's southern and eastern slopes served as the home of the Chagga Kingdoms until their abolition in 1963 by Julius Nyerere. The origin and meaning of the name Kilimanjaro is unknown, but may mean \"mountain of greatness\" or \"unclimbable\". Although described in classical sources, German missionary Johannes Rebmann is credited as the first European to report the mountain's existence, in 1848. After several European attempts, Hans Meyer reached Kilimanjaro's highest summit in 1889. The mountain was incorporated into Kilimanjaro National Park in 1973. As one of the Seven Summits, Kilimanjaro is a major hiking and climbing destination. There are seven established routes to Uhuru Peak, the mountain's highest point. Although not as technically challenging as similar mountains, the prominence of Kilimanjaro poses a serious risk of altitude sickness.",
+        "address":	"Kilimanjaro Region, Tanzania",
+        "country": "Tanzania",
+        "continent": "Africa",
+        "rating": 8.6
+    }
+]

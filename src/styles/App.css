@@ -1,0 +1,112 @@
+body{
+  font-size: 100%;
+  padding: 0px;
+  margin: 0px;
+  height: 100%;
+  overflow-y: auto;
+}
+h1{
+  text-align: center;
+  font-size: 7em;
+  font-family: 'Cormorant Garamond','Times New Roman', Arial;
+  color: white;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+  font-weight: 400;
+}
+div header p{
+  font-size: 1.6em;
+  margin-left: 10px;
+  font-family: 'Cormorant Garamond','Times New Roman', Arial;
+  font-weight: 500;
+  color: #ffffff;
+}
+.startbutton{
+  display: inline-block;
+  background-color: rgb(236, 226, 226);
+  color: #3d5669;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 25px;
+  cursor: pointer;
+  border-radius: 12px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+  font-family: 'Cormorant Garamond','Times New Roman', Arial;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+
+}
+.startbutton:hover{
+  background-color: rgb(207, 196, 196);
+  color: #07314d;
+}
+.title-container {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  text-align: center;
+  background-image: url("machupicchu.jpg");
+  height: 100vh;
+  width: 100vw;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  justify-content: center;
+}
+h2{
+  color:black;
+  font-family: 'Cormorant Garamond','Times New Roman', Arial;
+  font-weight: 400;
+  font-size: 3em;
+}
+.charts h1{
+  color:black;
+  font-family: 'Cormorant Garamond','Times New Roman', Arial;
+  font-weight: 400;
+  font-size: 3.3em;
+  margin-top: 100px;
+}
+.charts h2{
+  margin-left: 30px;
+  font-size: 2.5em;
+}
+.offline-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #ff9800;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  z-index: 1000;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
+
+.infinite-loader {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.infinite-loader button {
+  padding: 10px 20px;
+  background-color: #3d5669;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Cormorant Garamond', 'Times New Roman', Arial;
+  font-size: 1em;
+}
+
+.infinite-loader button:hover {
+  background-color: #2a3e50;
+}
