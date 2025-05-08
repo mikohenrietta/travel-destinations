@@ -1,11 +1,21 @@
 import "./styles/AddDestination.css";
 import { useState } from "react";
-
+interface Destination {
+  id: number;
+  name: string;
+  country: string;
+  description: string;
+  address: string;
+  picture: string;
+  continent: string;
+  rating: number;
+}
 interface Props {
   setDestinations: React.Dispatch<React.SetStateAction<any[]>>;
+  createDestination: (destination: Omit<Destination, "id">) => void;
 }
 
-function AddDestination({ setDestinations }: Props) {
+function AddDestination({ setDestinations, createDestination }: Props) {
   const [preview, setPreview] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,8 +29,7 @@ function AddDestination({ setDestinations }: Props) {
     }
   };
 
-  const handleSave = () => {
-    event?.preventDefault();
+  const handleSave = async () => {
     const name = (document.getElementById("name") as HTMLTextAreaElement).value;
     const location = (
       document.getElementById("location") as HTMLTextAreaElement
@@ -33,12 +42,20 @@ function AddDestination({ setDestinations }: Props) {
     const description = (
       document.getElementById("description") as HTMLTextAreaElement
     ).value;
+    const rating = parseInt(
+      (document.getElementById("rating") as HTMLInputElement).value
+    );
     const fileInput = document.getElementById("file") as HTMLInputElement;
-    const rating = (document.getElementById("rating") as HTMLTextAreaElement)
-      .value;
     const file = fileInput.files ? fileInput.files[0] : null;
 
-    if (!name || !location || !country || !continent || !description) {
+    if (
+      !name ||
+      !location ||
+      !country ||
+      !continent ||
+      !description ||
+      isNaN(rating)
+    ) {
       alert("Please fill in all fields.");
       return;
     }
@@ -49,14 +66,15 @@ function AddDestination({ setDestinations }: Props) {
       country,
       continent,
       description,
-      picture: file ? URL.createObjectURL(file) : null,
-      address: `${location}, ${country}, ${continent}`,
       rating,
+      picture: file ? file.name : "",
+      address: `${location}, ${country}, ${continent}`,
     };
 
-    setDestinations((prev) => [...prev, newDestination]);
+    console.log(newDestination);
 
-    alert("Destination saved successfully!");
+    createDestination(newDestination);
+    alert("Destination saved!");
 
     (document.getElementById("name") as HTMLTextAreaElement).value = "";
     (document.getElementById("location") as HTMLTextAreaElement).value = "";

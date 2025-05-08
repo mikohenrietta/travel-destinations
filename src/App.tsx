@@ -29,7 +29,7 @@ function App() {
   const { isOnline, isServerOnline } = useNetworkStatus();
   const isFullyOnline = isOnline && isServerOnline;
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (isFullyOnline) {
       offlineService.processQueue().then(() => {
         fetchDestinations();
@@ -40,7 +40,7 @@ function App() {
         setDestinations(JSON.parse(localData));
       }
     }
-  }, [isFullyOnline]);
+  }, [isFullyOnline]);*/
 
   useEffect(() => {
     if (isFullyOnline) {
@@ -80,6 +80,54 @@ function App() {
       localStorage.setItem(
         "destinations",
         JSON.stringify(destinations.filter((d) => d.id !== id))
+      );
+    }
+  };
+  const createDestination = (newDestination: Omit<Destination, "id">) => {
+    console.log("Creating destination:", newDestination);
+
+    if (isFullyOnline) {
+      console.log("Sending to server:", {
+        url: API_URL,
+        data: newDestination,
+        isFullyOnline,
+      });
+      console.log("Data validation:", {
+        hasName: !!newDestination.name,
+        hasLocation: !!newDestination.address,
+        hasCountry: !!newDestination.country,
+        hasContinent: !!newDestination.continent,
+        hasDescription: !!newDestination.description,
+        isValidRating: !isNaN(newDestination.rating),
+        hasPicture: !!newDestination.picture,
+        fullObject: newDestination,
+      });
+      axios
+        .post(API_URL, newDestination)
+        .then((res) => setDestinations((prev) => [...prev, res.data]))
+        .catch((err) => {
+          console.error("Error saving destination:", err);
+          console.log("Error response data:", err.response?.data); // This is crucial
+          console.log("Request config:", err.config); // Shows what was sent
+          alert("Failed to save destination. Please try again.");
+        });
+    } else {
+      const newId = Date.now();
+      const offlineDestination = { ...newDestination, id: newId };
+
+      offlineService.addToQueue({
+        type: "CREATE",
+        payload: offlineDestination,
+      });
+
+      setDestinations((prev) => [...prev, offlineDestination]);
+
+      const savedLocal = JSON.parse(
+        localStorage.getItem("destinations") || "[]"
+      );
+      localStorage.setItem(
+        "destinations",
+        JSON.stringify([...savedLocal, offlineDestination])
       );
     }
   };
@@ -142,7 +190,12 @@ function App() {
         />
         <Route
           path="/add"
-          element={<AddDestination setDestinations={setDestinations} />}
+          element={
+            <AddDestination
+              setDestinations={setDestinations}
+              createDestination={createDestination}
+            />
+          }
         />
         <Route
           path="/attraction/:name"

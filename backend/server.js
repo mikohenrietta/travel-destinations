@@ -1,8 +1,10 @@
 import express from "express";
+import { PrismaClient } from './generated/prisma/client.js';
 import cors from "cors";
 import { body, param, validationResult } from "express-validator";
 import path from 'path';
 
+const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -224,36 +226,75 @@ const validateDestination = [
   body("rating").isNumeric().custom((value) => value >= 0 && value <= 10),
 ];
 
-app.get("/", (req, res) => {
+/*app.get("/", (req, res) => {
     res.json(destinations);
+  });*/
+
+  app.get("/continents", async (req, res) => {
+    try {
+      const continents = await prisma.continent.findMany({
+        include: {
+          countries: true
+        }
+      });
+      res.json(continents);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
   });
 // GET all destinations with optional filtering & sorting
-app.get("/destinations", (req, res) => {
-  //const result = destinations.slice(startIndex, endIndex);
-  let result = [...destinations];
+// Update your GET endpoint to match Prisma models
+app.get("/destinations", async (req, res) => {
+  try {
+    const { continent, country, sortBy } = req.query;
 
-  // Filtering
-  if (req.query.continent) {
-    result = result.filter((d) => d.continent === req.query.continent);
-  }
-  if (req.query.country) {
-    result = result.filter((d) => d.country === req.query.country);
-  }
+    const destinations = await prisma.destination.findMany({
+      include: {
+        country: {
+          include: {
+            continent: true
+          }
+        }
+      },
+      where: {
+        ...(continent && {
+          country: {
+            continent: {
+              name: continent
+            }
+          }
+        }),
+        ...(country && {
+          country: {
+            countryName: country
+          }
+        })
+      },
+      orderBy: sortBy ? { [sortBy]: 'asc' } : undefined
+    });
 
-  // Sorting
-  if (req.query.sortBy) {
-    const sortKey = req.query.sortBy;
-    result.sort((a, b) => (a[sortKey] > b[sortKey] ? 1 : -1));
+    // Transform data to match frontend expectations
+    const transformed = destinations.map(d => ({
+      id: d.id,
+      name: d.name,
+      country: d.country.countryName,
+      continent: d.country.continent.name,
+      description: d.description,
+      address: d.address,
+      picture: d.picture,
+      rating: d.rating
+    }));
+
+    res.json(transformed);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
-  /*const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 6;
-  const startIndex = (page - 1) * limit;
-  const paginated = result.slice(startIndex, startIndex+limit);*/
-  res.json(result);
 });
 
 // POST new destination
-app.post("/destinations", validateDestination, (req, res) => {
+/*app.post("/destinations", validateDestination, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -261,10 +302,74 @@ app.post("/destinations", validateDestination, (req, res) => {
   const newDestination = { id: Date.now(), ...req.body };
   destinations.push(newDestination);
   res.status(201).json(newDestination);
+});*/
+app.post("/destinations", async (req, res) => {
+  try {
+    const {
+      name,
+      location,
+      country: countryName,
+      continent: continentName,
+      description,
+      rating,
+      picture,
+    } = req.body;
+
+    // Step 1: Find or create the continent
+    let continent = await prisma.continent.findFirst({
+      where: { name: continentName },
+    });
+
+    if (!continent) {
+      continent = await prisma.continent.create({
+        data: { name: continentName },
+      });
+    }
+
+    // Step 2: Find or create the country under that continent
+    let country = await prisma.country.findFirst({
+      where: {
+        countryName,
+        continentId: continent.id,
+      },
+    });
+
+    if (!country) {
+      country = await prisma.country.create({
+        data: {
+          countryName,
+          continent: {
+            connect: { id: continent.id },
+          },
+        },
+      });
+    }
+
+    // Step 3: Create the destination
+    const address = `${location}, ${countryName}, ${continentName}`;
+    const newDestination = await prisma.destination.create({
+      data: {
+        name,
+        countryId: country.id,
+        picture,
+        rating: parseInt(rating),
+        description,
+        address,
+      },
+    });
+
+    res.status(201).json(newDestination);
+  } catch (error) {
+    console.error("Error creating destination:", error);
+    res.status(500).json({ error: "Failed to create destination" });
+  }
 });
 
+app.listen(3000, () => {
+  console.log("Server running on http://localhost:3000");
+});
 // PATCH update destination
-app.patch("/destinations/:id", validateDestination, (req, res) => {
+/*app.patch("/destinations/:id", validateDestination, (req, res) => {
   const { id } = req.params;
   const index = destinations.findIndex((d) => d.id == id);
   if (index === -1) return res.status(404).json({ error: "Destination not found" });
@@ -276,13 +381,85 @@ app.patch("/destinations/:id", validateDestination, (req, res) => {
   
   destinations[index] = { ...destinations[index], ...req.body };
   res.json(destinations[index]);
+});*/
+app.patch("/destinations/:id", [
+  body("name").isString().notEmpty(),
+  body("countryId").isInt(),
+  body("description").isString().notEmpty(),
+  body("address").isString().notEmpty(),
+  body("picture").isString().notEmpty(),
+  body("rating").isNumeric().custom((value) => value >= 0 && value <= 10),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    const { id } = req.params;
+    const { name, countryId, description, address, picture, rating } = req.body;
+    
+    const updatedDestination = await prisma.destination.update({
+      where: { id: Number(id) },
+      data: {
+        name,
+        countryId: Number(countryId),
+        description,
+        address,
+        picture,
+        rating: Number(rating)
+      },
+      include: {
+        country: {
+          include: {
+            continent: true
+          }
+        }
+      }
+    });
+
+    // Transform to match frontend format
+    const transformed = {
+      id: updatedDestination.id,
+      name: updatedDestination.name,
+      country: updatedDestination.country.countryName,
+      continent: updatedDestination.country.continent.name,
+      description: updatedDestination.description,
+      address: updatedDestination.address,
+      picture: updatedDestination.picture,
+      rating: updatedDestination.rating
+    };
+
+    res.json(transformed);
+  } catch (error) {
+    console.error(error);
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: "Destination not found" });
+    }
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // DELETE destination
-app.delete("/destinations/:id", (req, res) => {
+/*app.delete("/destinations/:id", (req, res) => {
   const { id } = req.params;
   destinations = destinations.filter((d) => d.id != id);
   res.status(204).send();
+});*/
+app.delete("/destinations/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.destination.delete({
+      where: { id: Number(id) }
+    });
+    res.status(204).send();
+  } catch (error) {
+    console.error(error);
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: "Destination not found" });
+    }
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
