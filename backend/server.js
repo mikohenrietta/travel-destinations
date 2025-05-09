@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-
+/*
 let destinations = [
     {
       id: 1,
@@ -213,7 +213,7 @@ let destinations = [
       rating: 9.4
     }
   ];
-  
+  */
 
 // Middleware to validate request data
 const validateDestination = [
@@ -225,10 +225,6 @@ const validateDestination = [
   body("picture").isString().notEmpty(),
   body("rating").isNumeric().custom((value) => value >= 0 && value <= 10),
 ];
-
-/*app.get("/", (req, res) => {
-    res.json(destinations);
-  });*/
 
   app.get("/continents", async (req, res) => {
     try {
@@ -243,8 +239,7 @@ const validateDestination = [
       res.status(500).json({ error: "Internal server error" });
     }
   });
-// GET all destinations with optional filtering & sorting
-// Update your GET endpoint to match Prisma models
+
 app.get("/destinations", async (req, res) => {
   try {
     const { continent, country, sortBy } = req.query;
@@ -274,7 +269,6 @@ app.get("/destinations", async (req, res) => {
       orderBy: sortBy ? { [sortBy]: 'asc' } : undefined
     });
 
-    // Transform data to match frontend expectations
     const transformed = destinations.map(d => ({
       id: d.id,
       name: d.name,
@@ -292,17 +286,26 @@ app.get("/destinations", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-// POST new destination
-/*app.post("/destinations", validateDestination, (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+app.get("/top-rated-countries", async (req, res) => {
+  try {
+    const result = await prisma.$queryRaw`
+      SELECT 
+        c."id",
+        c."countryName",
+        AVG(d."rating") as "averageRating"
+      FROM "Country" c
+      JOIN "Destination" d ON d."countryId" = c."id"
+      GROUP BY c."id"
+      ORDER BY "averageRating" DESC
+      LIMIT 10;
+    `;
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
   }
-  const newDestination = { id: Date.now(), ...req.body };
-  destinations.push(newDestination);
-  res.status(201).json(newDestination);
-});*/
+});
+// POST new destination
 app.post("/destinations", async (req, res) => {
   try {
     const {
@@ -315,7 +318,6 @@ app.post("/destinations", async (req, res) => {
       picture,
     } = req.body;
 
-    // Step 1: Find or create the continent
     let continent = await prisma.continent.findFirst({
       where: { name: continentName },
     });
@@ -326,7 +328,6 @@ app.post("/destinations", async (req, res) => {
       });
     }
 
-    // Step 2: Find or create the country under that continent
     let country = await prisma.country.findFirst({
       where: {
         countryName,
@@ -345,7 +346,6 @@ app.post("/destinations", async (req, res) => {
       });
     }
 
-    // Step 3: Create the destination
     const address = `${location}, ${countryName}, ${continentName}`;
     const newDestination = await prisma.destination.create({
       data: {
@@ -369,19 +369,6 @@ app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
 // PATCH update destination
-/*app.patch("/destinations/:id", validateDestination, (req, res) => {
-  const { id } = req.params;
-  const index = destinations.findIndex((d) => d.id == id);
-  if (index === -1) return res.status(404).json({ error: "Destination not found" });
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  
-  destinations[index] = { ...destinations[index], ...req.body };
-  res.json(destinations[index]);
-});*/
 app.patch("/destinations/:id", [
   body("name").isString().notEmpty(),
   body("countryId").isInt(),
@@ -418,7 +405,6 @@ app.patch("/destinations/:id", [
       }
     });
 
-    // Transform to match frontend format
     const transformed = {
       id: updatedDestination.id,
       name: updatedDestination.name,
@@ -441,11 +427,6 @@ app.patch("/destinations/:id", [
 });
 
 // DELETE destination
-/*app.delete("/destinations/:id", (req, res) => {
-  const { id } = req.params;
-  destinations = destinations.filter((d) => d.id != id);
-  res.status(204).send();
-});*/
 app.delete("/destinations/:id", async (req, res) => {
   try {
     const { id } = req.params;

@@ -71,6 +71,7 @@ async function main() {
   const usa = await prisma.country.findFirst({ where: { countryName: 'United States' } });
   const brazil = await prisma.country.findFirst({ where: { countryName: 'Brazil' } });
   const australia = await prisma.country.findFirst({ where: { countryName: 'Australia' } });
+  const england = await prisma.country.findFirst({ where: { countryName: 'England' } });
 
   // Seed Destinations
   await prisma.destination.createMany({

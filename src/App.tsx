@@ -9,6 +9,7 @@ import AttractionDetails from "./AttractionDetails";
 import { useNetworkStatus } from "./hooks/useNetworkStatus";
 import { offlineService } from "./services/offlineService";
 import axios from "axios";
+import ChartsPage from "./Charts";
 
 interface Destination {
   id: number;
@@ -21,34 +22,30 @@ interface Destination {
   rating: number;
 }
 
-//const API_URL = "http://172.30.245.117:3000/destinations";
 const API_URL = "http://localhost:3000/destinations";
 
 function App() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [isSyncing, setIsSyncing] = useState(false);
   const { isOnline, isServerOnline } = useNetworkStatus();
   const isFullyOnline = isOnline && isServerOnline;
 
-  /*useEffect(() => {
-    if (isFullyOnline) {
-      offlineService.processQueue().then(() => {
-        fetchDestinations();
-      });
-    } else {
-      const localData = localStorage.getItem("destinations");
-      if (localData) {
-        setDestinations(JSON.parse(localData));
-      }
-    }
-  }, [isFullyOnline]);*/
-
   useEffect(() => {
-    if (isFullyOnline) {
-      axios
-        .get(API_URL)
-        .then((res) => setDestinations(res.data))
-        .catch((err) => console.error("Error fetching destinations:", err));
-    }
+    const handleNetworkChange = async () => {
+      if (isFullyOnline) {
+        try {
+          setIsSyncing(true);
+          await offlineService.processQueue();
+          await fetchDestinations();
+        } catch (error) {
+          console.error("Sync error:", error);
+        } finally {
+          setIsSyncing(false);
+        }
+      }
+    };
+
+    handleNetworkChange();
   }, [isFullyOnline]);
 
   const fetchDestinations = async () => {
@@ -56,12 +53,7 @@ function App() {
       const res = await axios.get(API_URL);
       setDestinations(res.data);
     } catch (error) {
-      if (!isFullyOnline) {
-        const localData = localStorage.getItem("destinations");
-        if (localData) {
-          setDestinations(JSON.parse(localData));
-        }
-      }
+      console.error("Error fetching destinations:", error);
     }
   };
 
@@ -69,46 +61,24 @@ function App() {
     if (isFullyOnline) {
       axios
         .delete(`${API_URL}/${id}`)
-        .then(() => setDestinations(destinations.filter((d) => d.id !== id)))
+        .then(() => setDestinations((prev) => prev.filter((d) => d.id !== id)))
         .catch(console.error);
     } else {
       offlineService.addToQueue({
         type: "DELETE",
         payload: { id },
       });
-      setDestinations(destinations.filter((d) => d.id !== id));
-      localStorage.setItem(
-        "destinations",
-        JSON.stringify(destinations.filter((d) => d.id !== id))
-      );
+      setDestinations((prev) => prev.filter((d) => d.id !== id));
     }
   };
-  const createDestination = (newDestination: Omit<Destination, "id">) => {
-    console.log("Creating destination:", newDestination);
 
+  const createDestination = (newDestination: Omit<Destination, "id">) => {
     if (isFullyOnline) {
-      console.log("Sending to server:", {
-        url: API_URL,
-        data: newDestination,
-        isFullyOnline,
-      });
-      console.log("Data validation:", {
-        hasName: !!newDestination.name,
-        hasLocation: !!newDestination.address,
-        hasCountry: !!newDestination.country,
-        hasContinent: !!newDestination.continent,
-        hasDescription: !!newDestination.description,
-        isValidRating: !isNaN(newDestination.rating),
-        hasPicture: !!newDestination.picture,
-        fullObject: newDestination,
-      });
       axios
         .post(API_URL, newDestination)
         .then((res) => setDestinations((prev) => [...prev, res.data]))
         .catch((err) => {
           console.error("Error saving destination:", err);
-          console.log("Error response data:", err.response?.data); // This is crucial
-          console.log("Request config:", err.config); // Shows what was sent
           alert("Failed to save destination. Please try again.");
         });
     } else {
@@ -121,14 +91,6 @@ function App() {
       });
 
       setDestinations((prev) => [...prev, offlineDestination]);
-
-      const savedLocal = JSON.parse(
-        localStorage.getItem("destinations") || "[]"
-      );
-      localStorage.setItem(
-        "destinations",
-        JSON.stringify([...savedLocal, offlineDestination])
-      );
     }
   };
 
@@ -154,14 +116,6 @@ function App() {
           d.id === updatedDestination.id ? updatedDestination : d
         )
       );
-      localStorage.setItem(
-        "destinations",
-        JSON.stringify(
-          destinations.map((d) =>
-            d.id === updatedDestination.id ? updatedDestination : d
-          )
-        )
-      );
     }
   };
 
@@ -174,6 +128,9 @@ function App() {
         <div className="offline-banner">
           Server Unavailable - Working Locally
         </div>
+      )}
+      {isSyncing && (
+        <div className="sync-banner">Syncing offline changes...</div>
       )}
       <Header />
       <Routes>
@@ -200,6 +157,10 @@ function App() {
         <Route
           path="/attraction/:name"
           element={<AttractionDetails destinations={destinations} />}
+        />
+        <Route
+          path="/charts"
+          element={<ChartsPage destinations={destinations} />}
         />
       </Routes>
     </div>

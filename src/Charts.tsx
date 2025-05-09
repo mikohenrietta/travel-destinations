@@ -1,37 +1,54 @@
-/*import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, Legend, 
-  PieChart, Pie, Cell, LineChart, Line, CartesianGrid
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+  CartesianGrid,
 } from "recharts";
 interface Destination {
-    name: string;
-    country: string;
-    description: string;
-    address: string;
-    picture: string;
-    continent: string;
-    rating: number;
+  name: string;
+  country: string;
+  description: string;
+  address: string;
+  picture: string;
+  continent: string;
+  rating: number;
 }
 
 const colors = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A28FE3"];
 
 interface ChartsPageProps {
-    destinations: Destination[];
+  destinations: Destination[];
 }
 
 const ChartsPage: React.FC<ChartsPageProps> = ({ destinations }) => {
-    const [continentData, setContinentData] = useState<{ name: string; value: number }[]>([]);
+  const [continentData, setContinentData] = useState<
+    { name: string; value: number }[]
+  >([]);
 
   useEffect(() => {
-    const continentCounts: Record<string, number> = destinations.reduce((acc, { continent }) => {
+    const continentCounts: Record<string, number> = destinations.reduce(
+      (acc, { continent }) => {
         acc[continent] = (acc[continent] || 0) + 1;
         return acc;
-      }, {} as Record<string, number>);
+      },
+      {} as Record<string, number>
+    );
 
-    const formattedData = Object.entries(continentCounts).map(([key, value]) => ({
-      name: key,
-      value,
-    }));
+    const formattedData = Object.entries(continentCounts).map(
+      ([key, value]) => ({
+        name: key,
+        value,
+      })
+    );
 
     setContinentData(formattedData);
   }, []);
@@ -39,7 +56,7 @@ const ChartsPage: React.FC<ChartsPageProps> = ({ destinations }) => {
   return (
     <div className="charts">
       <h1>Travel Destination Charts</h1>
-      
+
       <div>
         <h2>Ratings of Destinations</h2>
         <BarChart width={500} height={300} data={destinations}>
@@ -54,9 +71,20 @@ const ChartsPage: React.FC<ChartsPageProps> = ({ destinations }) => {
       <div>
         <h2>Destinations by Continent</h2>
         <PieChart width={400} height={300}>
-          <Pie data={continentData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
+          <Pie
+            data={continentData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={100}
+            label
+          >
             {continentData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+              <Cell
+                key={`cell-${index}`}
+                fill={colors[index % colors.length]}
+              />
             ))}
           </Pie>
         </PieChart>
@@ -78,4 +106,3 @@ const ChartsPage: React.FC<ChartsPageProps> = ({ destinations }) => {
 };
 
 export default ChartsPage;
-*/

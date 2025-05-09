@@ -1,34 +1,29 @@
 // src/services/offlineService.ts
 import axios from "axios";
-const API_URL = "http://localhost:3000/destinations";
-//const API_URL = "http://172.30.245.117:3000/destinations";
 
-const QUEUE_KEY = 'offline_operations';
+const API_URL = "http://localhost:3000/destinations";
+
+let operationQueue: Array<{ type: 'CREATE' | 'UPDATE' | 'DELETE', payload: any }> = [];
 
 export const offlineService = {
-  getQueue: () => {
-    const queue = localStorage.getItem(QUEUE_KEY);
-    return queue ? JSON.parse(queue) : [];
-  },
+  getQueue: () => [...operationQueue], // Return a copy
 
-  addToQueue: (operation: { type: string; payload: any }) => {
-    const queue = offlineService.getQueue();
-    queue.push(operation);
-    localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
+  addToQueue: (operation: { type: 'CREATE' | 'UPDATE' | 'DELETE', payload: any }) => {
+    operationQueue.push(operation);
   },
 
   clearQueue: () => {
-    localStorage.removeItem(QUEUE_KEY);
+    operationQueue = [];
   },
 
   processQueue: async () => {
-    const queue = offlineService.getQueue();
-    if (queue.length === 0) return;
+    if (operationQueue.length === 0) return;
 
     try {
-      for (const op of queue) {
+      // Process in order
+      for (const op of operationQueue) {
         switch (op.type) {
-          case 'ADD':
+          case 'CREATE': // Changed from 'ADD' to match your usage
             await axios.post(API_URL, op.payload);
             break;
           case 'UPDATE':
@@ -40,8 +35,10 @@ export const offlineService = {
         }
       }
       offlineService.clearQueue();
+      return true; // Indicate success
     } catch (error) {
       console.error('Sync failed:', error);
+      throw error; // Re-throw to handle in component
     }
   }
 };

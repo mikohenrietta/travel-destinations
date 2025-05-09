@@ -46,7 +46,10 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
     <div className="attraction-details">
       <h2>The {name}</h2>
       <div className="image-holder">
-        <img src={image || destinations[currentIndex].picture} alt={name} />
+        <img
+          src={`/${image}` || destinations[currentIndex].picture}
+          alt={name}
+        />
       </div>
       <p>{description || destinations[currentIndex].description}</p>
       <p>Rating: {rating || destinations[currentIndex].rating}</p>

@@ -24,6 +24,9 @@ model Country{
   continent Continent @relation(fields: [continentId], references: [id])
   continentId Int
   destinations Destination[]
+
+    @@index([countryName])
+  @@index([continentId])
 }
 model Destination{
   id Int @id @default(autoincrement())
@@ -34,4 +37,8 @@ model Destination{
   rating Int
   description String @db.Text
   address String
+
+    @@index([name])
+  @@index([countryId])
+  @@index([rating])
 }
