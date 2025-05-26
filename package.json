@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "test": "react-scripts test --coverage",
     "start": "node backend/server.js",
-    "seed": "ts-node backend/seed.ts"
+    "seed": "node backend/populate.js"
 
   },
   "dependencies": {
