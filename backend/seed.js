@@ -34,33 +34,33 @@ export async function main() {
   const countries = await prisma.country.createMany({
     data: [
       // Africa
-      { countryName: 'Egypt', continentId: africa!.id },
-      { countryName: 'South Africa', continentId: africa!.id },
-      { countryName: 'Kenya', continentId: africa!.id },
+      { countryName: 'Egypt', continentId: africa.id },
+      { countryName: 'South Africa', continentId: africa.id },
+      { countryName: 'Kenya', continentId: africa.id },
       
       // Asia
-      { countryName: 'Japan', continentId: asia!.id },
-      { countryName: 'Thailand', continentId: asia!.id },
-      { countryName: 'India', continentId: asia!.id },
+      { countryName: 'Japan', continentId: asia.id },
+      { countryName: 'Thailand', continentId: asia.id },
+      { countryName: 'India', continentId: asia.id },
       
       // Europe
-      { countryName: 'France', continentId: europe!.id },
-      { countryName: 'Italy', continentId: europe!.id },
-      { countryName: 'Spain', continentId: europe!.id },
+      { countryName: 'France', continentId: europe.id },
+      { countryName: 'Italy', continentId: europe.id },
+      { countryName: 'Spain', continentId: europe.id },
       
       // North America
-      { countryName: 'United States', continentId: northAmerica!.id },
-      { countryName: 'Canada', continentId: northAmerica!.id },
-      { countryName: 'Mexico', continentId: northAmerica!.id },
+      { countryName: 'United States', continentId: northAmerica.id },
+      { countryName: 'Canada', continentId: northAmerica.id },
+      { countryName: 'Mexico', continentId: northAmerica.id },
       
       // South America
-      { countryName: 'Brazil', continentId: southAmerica!.id },
-      { countryName: 'Argentina', continentId: southAmerica!.id },
-      { countryName: 'Peru', continentId: southAmerica!.id },
+      { countryName: 'Brazil', continentId: southAmerica.id },
+      { countryName: 'Argentina', continentId: southAmerica.id },
+      { countryName: 'Peru', continentId: southAmerica.id },
       
       // Oceania
-      { countryName: 'Australia', continentId: oceania!.id },
-      { countryName: 'New Zealand', continentId: oceania!.id },
+      { countryName: 'Australia', continentId: oceania.id },
+      { countryName: 'New Zealand', continentId: oceania.id },
     ],
   });
 
@@ -78,7 +78,7 @@ export async function main() {
     data: [
       {
         name: 'Pyramids of Giza',
-        countryId: egypt!.id,
+        countryId: egypt.id,
         picture: 'default.png',
         rating: 8,
         description: 'The last remaining wonder of the ancient world, these massive pyramids were built as tombs for pharaohs.',
@@ -86,7 +86,7 @@ export async function main() {
       },
       {
         name: 'Mount Fuji',
-        countryId: japan!.id,
+        countryId: japan.id,
         picture: 'fuji.jpg',
         rating: 10,
         description: 'Japan\'s tallest mountain and an active volcano that is considered one of the country\'s sacred symbols.',
@@ -94,7 +94,7 @@ export async function main() {
       },
       {
         name: 'Eiffel Tower',
-        countryId: france!.id,
+        countryId: france.id,
         picture: 'eiffel.jpg',
         rating: 7,
         description: 'The iconic iron tower on the Champ de Mars in Paris, named after engineer Gustave Eiffel.',
@@ -102,7 +102,7 @@ export async function main() {
       },
       {
         name: 'Grand Canyon',
-        countryId: usa!.id,
+        countryId: usa.id,
         picture: 'default.png',
         rating: 6,
         description: 'A massive gorge carved by the Colorado River in Arizona, known for its overwhelming size and colorful landscape.',
@@ -110,7 +110,7 @@ export async function main() {
       },
       {
         name: 'Christ the Redeemer',
-        countryId: brazil!.id,
+        countryId: brazil.id,
         picture: 'redeemer.jpg',
         rating: 7,
         description: 'An enormous Art Deco statue of Jesus Christ in Rio de Janeiro, standing atop Corcovado mountain.',
@@ -118,7 +118,7 @@ export async function main() {
       },
       {
         name: 'Sydney Opera House',
-        countryId: australia!.id,
+        countryId: australia.id,
         picture: 'default.png',
         rating: 6,
         description: 'A multi-venue performing arts center with a distinctive sail-like design, located on Sydney Harbour.',
