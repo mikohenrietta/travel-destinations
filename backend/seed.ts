@@ -3,7 +3,7 @@ import { PrismaClient } from './generated/prisma/client.js';
 
 const prisma = new PrismaClient();
 
-async function main() {
+export async function main() {
   // Clear existing data
   await prisma.destination.deleteMany();
   await prisma.country.deleteMany();

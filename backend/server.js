@@ -3,6 +3,7 @@ import { PrismaClient } from './generated/prisma/client.js';
 import cors from "cors";
 import { body, param, validationResult } from "express-validator";
 import path from 'path';
+import {main} from './seed.js';
 
 const prisma = new PrismaClient();
 const app = express();
@@ -215,6 +216,15 @@ let destinations = [
   ];
   */
 
+app.get('/seed', async (req, res) => {
+  try {
+    await seedDatabase();
+    res.send('Database seeded!');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Seeding failed');
+  }
+});
 // Middleware to validate request data
 const validateDestination = [
   body("name").isString().notEmpty(),
