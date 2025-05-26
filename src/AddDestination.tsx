@@ -11,11 +11,10 @@ interface Destination {
   rating: number;
 }
 interface Props {
-  setDestinations: React.Dispatch<React.SetStateAction<any[]>>;
   createDestination: (destination: Omit<Destination, "id">) => void;
 }
 
-function AddDestination({ setDestinations, createDestination }: Props) {
+function AddDestination({ createDestination }: Props) {
   const [preview, setPreview] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

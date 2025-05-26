@@ -15,7 +15,7 @@ describe("AddDestination", () => {
   const mockSetDestinations = vi.fn();
 
   beforeEach(() => {
-    render(<AddDestination setDestinations={mockSetDestinations} />);
+    render(<AddDestination createDestination={mockSetDestinations} />);
   });
 
   test("renders all form fields", () => {
@@ -54,89 +54,7 @@ describe("AddDestination", () => {
     expect(previewImage).toHaveAttribute("src");
   });
 
-  /*test("should add new destination and reset the form", async () => {
-    // Simulate user input
-    fireEvent.change(
-      screen.getAllByPlaceholderText(/name/i)[0] as HTMLTextAreaElement,
-      { target: { value: "Eiffel Tower" } }
-    );
-    fireEvent.change(
-      screen.getAllByPlaceholderText(/location/i)[0] as HTMLTextAreaElement,
-      { target: { value: "Paris" } }
-    );
-    fireEvent.change(
-      screen.getAllByPlaceholderText(/country/i)[0] as HTMLTextAreaElement,
-      { target: { value: "France" } }
-    );
-    fireEvent.change(
-      screen.getAllByPlaceholderText(/continent/i)[0] as HTMLTextAreaElement,
-      { target: { value: "Europe" } }
-    );
-    fireEvent.change(
-      screen.getAllByPlaceholderText(/rating/i)[0] as HTMLTextAreaElement,
-      { target: { value: "5" } }
-    );
-    fireEvent.change(
-      screen.getAllByPlaceholderText(/description/i)[0] as HTMLTextAreaElement,
-      { target: { value: "An iconic symbol of France" } }
-    );
-
-    // Mock file input change for picture upload (optional)
-    const fileInput = screen.getByLabelText(
-      /upload picture/i
-    ) as HTMLInputElement;
-    const file = new File(["image"], "eiffel.jpg", { type: "image/jpg" });
-    fireEvent.change(fileInput, { target: { files: [file] } });
-
-    // Simulate submitting the form
-    fireEvent.click(screen.getByTestId("save-form-button"));
-
-    // Wait for the mock function to be called and check the destination object passed to setDestinations
-    await waitFor(() => {
-      expect(mockSetDestinations).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          expect.objectContaining({
-            name: "Eiffel Tower",
-            location: "Paris",
-            country: "France",
-            continent: "Europe",
-            description: "An iconic symbol of France",
-            picture: expect.any(String), // Picture will be a data URL, hence using expect.any(String)
-            address: "Paris, France, Europe",
-            rating: "5",
-          }),
-        ])
-      );
-    });
-
-    // Check if the form fields have been reset
-    expect(
-      (screen.getAllByPlaceholderText(/name/i)[0] as HTMLTextAreaElement).value
-    ).toBe("");
-    expect(
-      (screen.getAllByPlaceholderText(/location/i)[0] as HTMLTextAreaElement)
-        .value
-    ).toBe("");
-    expect(
-      (screen.getAllByPlaceholderText(/country/i)[0] as HTMLTextAreaElement)
-        .value
-    ).toBe("");
-    expect(
-      (screen.getAllByPlaceholderText(/continent/i)[0] as HTMLTextAreaElement)
-        .value
-    ).toBe("");
-    expect(
-      (screen.getAllByPlaceholderText(/description/i)[0] as HTMLTextAreaElement)
-        .value
-    ).toBe("");
-    expect(
-      (screen.getAllByPlaceholderText(/rating/i)[0] as HTMLTextAreaElement)
-        .value
-    ).toBe("");
-    expect(fileInput.files).toHaveLength(0);
-  });
-
-  */ test("submits form with correct data", async () => {
+  test("submits form with correct data", async () => {
     // 1. Use userEvent for more realistic interactions
     const user = userEvent.setup();
 

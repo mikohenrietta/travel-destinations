@@ -80,7 +80,7 @@ const ChartsPage: React.FC<ChartsPageProps> = ({ destinations }) => {
             outerRadius={100}
             label
           >
-            {continentData.map((entry, index) => (
+            {continentData.map((_, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={colors[index % colors.length]}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import "./styles/App.css";
 import Header from "./Header";
 import Home from "./Home";
@@ -147,12 +147,7 @@ function App() {
         />
         <Route
           path="/add"
-          element={
-            <AddDestination
-              setDestinations={setDestinations}
-              createDestination={createDestination}
-            />
-          }
+          element={<AddDestination createDestination={createDestination} />}
         />
         <Route
           path="/attraction/:name"
