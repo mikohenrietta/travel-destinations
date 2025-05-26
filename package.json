@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "react-scripts test --coverage",
-    "start": "node backend/server.js"
+    "start": "node backend/server.js",
+    "seed": "ts-node backend/seed.ts"
+
   },
   "dependencies": {
     "@faker-js/faker": "^9.7.0",
