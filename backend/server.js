@@ -3,7 +3,7 @@ import { PrismaClient } from './generated/prisma/client.js';
 import cors from "cors";
 import { body, param, validationResult } from "express-validator";
 import path from 'path';
-import {main} from './seed.js';
+import {main as seedDb} from './seed.ts';
 
 const prisma = new PrismaClient();
 const app = express();
@@ -218,7 +218,7 @@ let destinations = [
 
 app.get('/seed', async (req, res) => {
   try {
-    await main();
+    await seedDb();
     res.send('Database seeded!');
   } catch (error) {
     console.error(error);
