@@ -218,7 +218,7 @@ let destinations = [
 
 app.get('/seed', async (req, res) => {
   try {
-    await seedDatabase();
+    await main();
     res.send('Database seeded!');
   } catch (error) {
     console.error(error);
