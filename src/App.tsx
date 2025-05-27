@@ -22,7 +22,7 @@ interface Destination {
   rating: number;
 }
 
-const API_URL = `${process.env.REACT_APP_API_URL}/destinations`;
+const API_URL = `${import.meta.env.VITE_API_URL}/destinations`;
 function App() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [isSyncing, setIsSyncing] = useState(false);
