@@ -46,7 +46,7 @@ div header p{
   flex-direction: column; 
   align-items: center;
   text-align: center;
-  background-image: url("machupicchu.jpg");
+  background-image: url("/machupicchu.jpg");
   height: 100vh;
   width: 100vw;
   background-size: cover;
