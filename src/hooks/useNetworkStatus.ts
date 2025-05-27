@@ -1,8 +1,8 @@
 // src/hooks/useNetworkStatus.ts
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-const API_URL = "http://localhost:3000/destinations";
-//const API_URL = "http://172.30.245.117:3000/destinations";
+const API_URL = `${process.env.REACT_APP_API_URL}/destinations`;
+
 
 export function useNetworkStatus() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);

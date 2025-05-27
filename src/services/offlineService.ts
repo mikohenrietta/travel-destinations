@@ -1,7 +1,7 @@
 // src/services/offlineService.ts
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/destinations";
+const API_URL = `${process.env.REACT_APP_API_URL}/destinations`;
 
 let operationQueue: Array<{ type: 'CREATE' | 'UPDATE' | 'DELETE', payload: any }> = [];
 
